@@ -1,0 +1,162 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>DnD Box</title>  
+<script src="js/DnDBox.js"></script>
+<link rel="stylesheet" href="css/style.css">
+<style>
+    .content {
+        position: absolute; 
+        height: 100%; 
+        width: 100%;
+        border-radius: 10%;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select:none;
+        user-select:none;
+    }
+    #container {
+        padding: 10px;
+    }
+    #title-content {
+        text-align: center;
+        height: 50px;
+        line-height: 50px;
+    }
+    #side-content {
+        float: left;
+    }
+    #main-content {
+        float: left;
+        border: 1px solid;
+        border-radius: 21px;
+        margin: 0px 10px;
+        background: black;
+    }
+    .message {
+        padding-left: 10px;
+        font-family: courier;
+        font-size: 14px;
+        background: rgb(0, 0, 0);
+        color: rgb(33, 248, 56);
+        padding: 5px;
+        overflow: hidden;
+        height: 20px;
+        cursor: text;
+    }
+</style>
+<script>   
+    window.onload = function () {
+        
+        var getColour = (function () {
+            var callCount = 0;
+            return function () {
+                var aColours = ["#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c", "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5", "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f", "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5"]; //d3 category20 colours
+                return aColours[callCount++];
+            }
+        })();
+        
+        var printMessage = function (message) {
+            var mainContent = document.getElementById("main-content");
+            var messageEle = document.createElement('p');
+            messageEle.classList.add("message");
+            messageEle.innerHTML = " > " + message;
+            mainContent.appendChild(messageEle); 
+        };
+        
+        var height = (window.innerHeight - 86) + "px"; // 86 = 50 + 20 + 16;
+        var width = "350px";
+        
+        var mainContentWidth = (window.innerWidth - 450) + "px";
+        document.getElementById('main-content').style.cssText += "width : " + mainContentWidth + ";height : " + height;
+        
+        var separator = document.createElement('div');
+        separator.style.cssText = "height: 100%; background: rgb(240, 240, 240)";
+        
+        var removeIconEle = document.createElement('div');
+        removeIconEle.style.cssText = "height: 100%; background: red";
+        
+        window.onresize = function () {
+            var height = (window.innerHeight - 86) + "px";
+            var mainContentWidth = (window.innerWidth - 450) + "px";
+            document.documentElement.querySelector('.DnD-container').style.cssText += "height : " + height;
+            document.getElementById('main-content').style.cssText += "width : " + mainContentWidth + ";height : " + height;
+        };
+        
+        var dndBox = new DnDBox({
+            containerHeight: height,
+            containerWidth: width,
+            blockHeight: "200px",
+            blockWidth: "200px",
+            blockMargin: "25px",
+            separator: separator,
+            removeIcon: removeIconEle,
+            separatorHeight: "30px",
+            removeIconHeight: "20px",
+            onBeforeDrag : function (nDragIndex) {
+                printMessage('Block ' + nDragIndex + ' is being dragged.');
+            },
+            onAfterDrop : function (fromIndex, toIndex) {
+                printMessage('Block Moved from ' + fromIndex + ' to ' + toIndex);
+            },
+            onAfterRemove : function (removedIndex) {
+                printMessage('Block ' + removedIndex + ' removed');
+            }
+        });
+        var sampleDiv, sampleP;
+        
+        sampleDiv = document.createElement('div');
+        sampleDiv.style.cssText = "background : " + getColour();
+        sampleDiv.classList.add("content");
+        sampleP = document.createElement('p');
+        sampleP.innerHTML = "IMMOVABLE.!!";
+        sampleP.style.cssText = "padding: 25%";
+        sampleDiv.appendChild(sampleP); 
+        
+        var sampleDiv2 = document.createElement('div');
+        sampleDiv2.style.cssText = "background : " + getColour();
+        sampleDiv2.classList.add("content");
+        sampleP = document.createElement('p');
+        sampleP.innerHTML = "CANT DROP ON ME";
+        sampleP.style.cssText = "padding: 25%";
+        sampleDiv2.appendChild(sampleP);
+        dndBox.addBlock([{blockElement : sampleDiv, dragState: false, dropState: false, removable: false}, 
+                         {blockElement : sampleDiv2, dropState : false}
+                        ]);
+        
+        sampleDiv = document.createElement('div');
+        sampleDiv.style.cssText = "background : " + getColour();
+        sampleDiv.classList.add("content");
+        sampleP = document.createElement('p');
+        sampleP.innerHTML = "CANT DRAG ME";
+        sampleP.style.cssText = "padding: 25%";
+        sampleDiv.appendChild(sampleP);
+        dndBox.addBlock({blockElement : sampleDiv, dragState : false});
+        
+        var i, noOfBlocks = 5;
+        for ( i = 0; i < noOfBlocks; i++) {
+            sampleDiv = document.createElement('div');
+            sampleDiv.style.cssText = "background : " + getColour();
+            sampleDiv.classList.add("content");
+            sampleP = document.createElement('p');
+            sampleP.innerHTML = "Content";
+            sampleP.style.cssText = "padding: 25%";
+            sampleDiv.appendChild(sampleP);
+            dndBox.addBlock({blockElement : sampleDiv});
+        }
+        
+        dndBox.placeAt('side-content');
+        
+        window.dndBox = dndBox;
+    };    
+</script>
+    
+</head>
+    <body>
+        <div id="container">
+            <div id="title-content">DnDBox</div>
+            <div id="side-content"></div>
+            <div id="main-content"></div>
+        </div>
+    </body>
+</html>

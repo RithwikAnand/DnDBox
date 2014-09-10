@@ -1,0 +1,26 @@
+.DnD-container {
+	background: rgb(240, 240, 240);
+}
+
+.DnD-block {    
+	transition: transform 0.8s ease 0;
+	-webkit-transition: -webkit-transform 0.8s;
+	-moz-transition: -moz-transform 0.8s;
+	-o-transition: -o-transform 0.8s;
+	-ms-transition: -ms-transform 0.8s;
+}
+
+.DnD-drag {
+	cursor: move;
+    
+	z-index: 1;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
+	filter: alpha(opacity=60);
+	opacity: 0.6;
+    
+	transition: transform 0s;
+	-webkit-transition: -webkit-transform 0s;
+	-moz-transition: -moz-transform 0s;
+	-o-transition: -o-transform 0s;
+	-ms-transition: -ms-transform 0s;
+}
